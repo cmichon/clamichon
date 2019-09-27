@@ -21,6 +21,9 @@ GEM
       tilt (~> 2.0)
     tilt (2.0.10)
 
+PLATFORMS
+  ruby
+
 DEPENDENCIES
   sinatra
   sinatra-contrib
