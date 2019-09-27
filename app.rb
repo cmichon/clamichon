@@ -14,7 +14,7 @@ get '/json' do
   payload = JSON.parse str_body
   p payload['action']
   str_body
-  ENV.to_h.to_yaml.to_s
+  ENV.class.to_s
 end
 
 post '/webhook' do
