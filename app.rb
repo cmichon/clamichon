@@ -8,11 +8,11 @@ get '/' do
 end
 
 get '/json' do
-  str_body = File.read("file.txt")
-  payload = JSON.parse str_body
-  p payload['action']
-  str_body
-  request.env.to_s
+  #str_body = File.read("file.txt") rescue ""
+  #payload = JSON.parse str_body
+  #p payload['action']
+  #str_body
+  ENV.to_s
 end
 
 post '/webhook' do
