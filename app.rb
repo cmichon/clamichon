@@ -12,6 +12,7 @@ get '/json' do
   payload = JSON.parse str_body
   p payload['action']
   str_body
+  ENV
 end
 
 post '/webhook' do
