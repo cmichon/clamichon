@@ -1,5 +1,6 @@
 require 'sinatra'
 require 'sinatra/reloader'
+require 'yaml'
 
 #~ set :bind, '0.0.0.0'
 
@@ -12,7 +13,7 @@ get '/json' do
   #payload = JSON.parse str_body
   #p payload['action']
   #str_body
-  ENV.to_s
+  ENV.to_h.to_yaml
 end
 
 post '/webhook' do
