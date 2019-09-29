@@ -1,1 +1,1 @@
-web: bundle exec rackup -s puma
+web: bundle exec rackup -s puma -p 9292
