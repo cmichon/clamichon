@@ -20,11 +20,15 @@ GEM
       sinatra (= 2.0.7)
       tilt (~> 2.0)
     tilt (2.0.10)
+    pg (1.1.4)
+    sequel (5.24.0)
 
 PLATFORMS
   ruby
 
 DEPENDENCIES
+  pg
+  sequel
   sinatra
   sinatra-contrib
 
