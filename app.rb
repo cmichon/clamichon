@@ -8,6 +8,10 @@ get '/' do
   "woot"
 end
 
+get '/db' do
+  DB.to_s
+end
+
 get '/json' do
   #str_body = File.read("file.txt") rescue ""
   #payload = JSON.parse str_body
