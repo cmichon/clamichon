@@ -30,6 +30,7 @@ post '/webhook' do
   #event = request.env['HTTP_X_GITHUB_EVENT']
   client = Octokit::Client.new(:access_token => ENV['GITHUB_AUTH_TOKEN'])
   pr = client.pull_request(repo, pr_number)
+  client.create_status 'cmichon/clatest', sha, 'success', { context:'license/cla' }
   client.create_status(
     repo,
     pr.head.sha,
