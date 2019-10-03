@@ -26,7 +26,26 @@ get '/profile' do
     # Request header for JSON response
     :accept => :json)
 
-  erb :profile
+  # Parse access_token from JSON response
+  access_token = JSON.parse(response)['access_token']
+
+  # Initialize Octokit client with user access_token
+  client = Octokit::Client.new(:access_token => access_token)
+
+  # Create user object for less typing
+  user = client.user
+
+  # Access user data
+  profile_data = { :user_login => user.login }
+
+  User.insert({
+    email: "x",
+    full_name: "x",
+    github_login: user.login
+  })
+
+  # Render profile page, passing in user profile data to be displayed
+  erb :profile, :locals => profile_data
 end
 
 #get '/db' do
