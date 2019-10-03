@@ -1,4 +1,5 @@
 require 'octokit'
+require 'rest-client'
 require 'sinatra'
 require 'sinatra/reloader'
 require 'yaml'
@@ -8,6 +9,23 @@ require 'yaml'
 get '/' do
   #"woot"
   erb :index, :locals => {:client_id => ENV['CLIENT_ID']}
+end
+
+get '/profile' do
+  # Retrieve temporary authorization grant code
+  session_code = request.env['rack.request.query_hash']['code']
+
+  # POST Auth Grant Code + CLIENT_ID/SECRECT in exchange for our access_token
+  response = RestClient.post(
+    'https://github.com/login/oauth/access_token',
+    # POST payload
+    { :client_id => CLIENT_ID,
+      :client_secret => CLIENT_SECRET,
+      :code => session_code },
+    # Request header for JSON response
+    :accept => :json)
+
+  erb :profile
 end
 
 #get '/db' do
