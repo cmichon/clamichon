@@ -72,17 +72,29 @@ post '/webhook' do
   #event = request.env['HTTP_X_GITHUB_EVENT']
   client = Octokit::Client.new(:access_token => ENV['GITHUB_AUTH_TOKEN'])
   pr = client.pull_request(repo, pr_number)
-  #client.create_status 'cmichon/clatest', sha, 'success', { context:'license/cla' }
-  client.create_status(
-    repo,
-    pr.head.sha,
-    'pending',
-    { :context => 'license/cla',
-      :description => 'Contributor License Agreement is not signed yet.',
-      :state => 'pending',
-      :target_url => 'http://clamichon.herokuapp.com'
-    }
-  )
+  pr_login = pr.head.user.login
+  if User.where(github_login: pr_login).count
+    client.create_status(
+      repo,
+      pr.head.sha,
+      'success',
+      { context:'license/cla',
+        :description => "Contributor License Agreement signed by @#{pr_login}.",
+        :state => 'success'
+      }
+    )
+  else
+    client.create_status(
+      repo,
+      pr.head.sha,
+      'pending',
+      { :context => 'license/cla',
+        :description => 'Contributor License Agreement is not signed yet.',
+        :state => 'pending',
+        :target_url => 'http://clamichon.herokuapp.com'
+      }
+    )
+  end
   "cla processed"
 end
 
