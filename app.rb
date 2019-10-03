@@ -36,7 +36,10 @@ get '/profile' do
   user = client.user
 
   # Access user data
-  profile_data = { :user_login => user.login }
+  profile_data = {
+    user_login: user.login,
+    user_url: user.url
+  }
 
   User.insert({
     email: "x",
