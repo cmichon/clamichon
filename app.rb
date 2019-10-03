@@ -6,7 +6,8 @@ require 'yaml'
 #~ set :bind, '0.0.0.0'
 
 get '/' do
-  "woot"
+  #"woot"
+  erb :index, :locals => {:client_id => ENV['CLIENT_ID']}
 end
 
 #get '/db' do
