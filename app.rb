@@ -19,8 +19,8 @@ get '/profile' do
   response = RestClient.post(
     'https://github.com/login/oauth/access_token',
     # POST payload
-    { :client_id => CLIENT_ID,
-      :client_secret => CLIENT_SECRET,
+    { :client_id => ENV['CLIENT_ID'],
+      :client_secret => ENV['CLIENT_SECRET'],
       :code => session_code },
     # Request header for JSON response
     :accept => :json)
