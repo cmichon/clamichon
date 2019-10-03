@@ -19,6 +19,17 @@ GEM
     rack (2.0.7)
     rack-protection (2.0.7)
       rack
+    rest-client (2.1.0)
+      http-accept (>= 1.7.0, < 2.0)
+      http-cookie (>= 1.0.2, < 2.0)
+      mime-types (>= 1.16, < 4.0)
+      netrc (~> 0.8)
+    rest-client (2.1.0-x64-mingw32)
+      ffi (~> 1.9)
+      http-accept (>= 1.7.0, < 2.0)
+      http-cookie (>= 1.0.2, < 2.0)
+      mime-types (>= 1.16, < 4.0)
+      netrc (~> 0.8)
     sawyer (0.8.2)
       addressable (>= 2.3.5)
       faraday (> 0.8, < 2.0)
@@ -36,6 +47,9 @@ GEM
       sinatra (= 2.0.7)
       tilt (~> 2.0)
     tilt (2.0.10)
+    unf (0.1.4)
+      unf_ext
+    unf_ext (0.0.7.6)
 
 PLATFORMS
   ruby
@@ -44,6 +58,7 @@ DEPENDENCIES
   octokit
   pg
   puma
+  rest-client
   sequel
   sinatra
   sinatra-contrib
