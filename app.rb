@@ -45,7 +45,7 @@ get '/profile' do
     email: "x",
     full_name: "x",
     github_login: user.login
-  })
+  }) unless User.where(github_login: user.login).count == 1
 
   # Render profile page, passing in user profile data to be displayed
   erb :profile, :locals => profile_data
