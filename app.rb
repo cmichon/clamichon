@@ -13,6 +13,7 @@ end
 
 get '/profile' do
   # Retrieve temporary authorization grant code
+  p request.env
   session_code = request.env['rack.request.query_hash']['code']
 
   # POST Auth Grant Code + CLIENT_ID/SECRECT in exchange for our access_token
