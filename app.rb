@@ -38,7 +38,7 @@ get '/profile' do
   # Access user data
   profile_data = {
     user_login: user.login,
-    user_url: user.url
+    user_url: user.html_url
   }
 
   User.insert({
