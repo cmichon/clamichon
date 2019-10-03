@@ -73,7 +73,7 @@ post '/webhook' do
   client = Octokit::Client.new(:access_token => ENV['GITHUB_AUTH_TOKEN'])
   pr = client.pull_request(repo, pr_number)
   pr_login = pr.head.user.login
-  if User.where(github_login: pr_login).count
+  if User.where(github_login: pr_login).count == 1
     client.create_status(
       repo,
       pr.head.sha,
