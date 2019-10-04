@@ -27,9 +27,9 @@ get '/profile' do
     url: "#{client.user.html_url}"
   }
   if User.where(login: locals[:login]).count == 1
-    locals['status'] = 'Welcome back!'
+    locals[:status] = 'Welcome back!'
   else
-    locals['status'] = 'Success!'
+    locals[:status] = 'Success!'
     User.insert({login: locals[:login]})
     client = Octokit::Client.new(:access_token => ENV['GITHUB_AUTH_TOKEN']) # next ops as repo owner
     Check.where(login: locals[:login]).each do |e|
