@@ -48,8 +48,8 @@ get '/profile' do
 end
 
 post '/webhook' do
-  str_body = request.body.read
-  payload = JSON.parse str_body
+  return "" unless request.env['HTTP_X_GITHUB_EVENT'] == "pull_request" # we only accept pull_request
+  payload = JSON.parse request.body.read
   repo = payload["repository"]["full_name"]
   pr_number = payload["number"]
   client = Octokit::Client.new(access_token: ENV['GITHUB_AUTH_TOKEN'])
