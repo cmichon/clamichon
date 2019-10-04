@@ -7,43 +7,32 @@ get '/' do
 end
 
 get '/profile' do
-  # Retrieve temporary authorization grant code
-  session_code = request.env['rack.request.query_hash']['code']
-
-  # validating OAuth2 authentication
-  response = RestClient.post(
+  access_response = RestClient.post(
     'https://github.com/login/oauth/access_token',
     {
       :client_id => ENV['CLIENT_ID'],
       :client_secret => ENV['CLIENT_SECRET'],
-      :code => session_code
+      :code => request.env['rack.request.query_hash']['code']
     },
     :accept => :json
   )
-
-  # Parse access_token from JSON response
-  access_token = JSON.parse(response)['access_token']
-
-  # Initialize Octokit client with user access_token
-  client = Octokit::Client.new(:access_token => access_token)
-
-  # Create user object for less typing
-  user = client.user
-
-  # Access user data
-  profile_data = {
-    user_login: user.login,
-    user_url: user.html_url
+  access_token = JSON.parse(access_response)['access_token']
+  client = Octokit::Client.new(access_token: access_token)
+  locals = {
+    user_login: client.user.login,
+    user_url: client.user.html_url
   }
-
-  User.insert({
-    email: "x",
-    full_name: "x",
-    github_login: user.login
-  }) unless User.where(github_login: user.login).count == 1
-
-  # Render profile page, passing in user profile data to be displayed
-  erb :profile, :locals => profile_data
+  if User.where(github_login: client.user.login).count == 1
+    locals['status'] = 'Welcome back!'
+  else
+    locals['status'] = 'Success!'
+    User.insert({
+      email: "x",
+      full_name: "x",
+      github_login: client.user.login
+    }) 
+  end
+  erb :profile, :locals => locals
 end
 
 post '/webhook' do
