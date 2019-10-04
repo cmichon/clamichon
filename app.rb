@@ -69,8 +69,9 @@ post '/webhook' do
         :target_url => 'http://clamichon.herokuapp.com'
       }
     )
+    Check.insert({login: pr_login, repo: repo, sha: pr.head.sha})
   end
-  "cla processed"
+  "webhook processed"
 end
 
 # vim:et:ff=unix:sw=2:ts=2:
