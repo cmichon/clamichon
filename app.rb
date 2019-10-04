@@ -23,14 +23,19 @@ get '/profile' do
   access_token = JSON.parse(access_response)['access_token']
   client = Octokit::Client.new(access_token: access_token)
   locals = {
-    user_login: client.user.login,
-    user_url: client.user.html_url
+    login: "#{client.user.login}",
+    url: "#{client.user.html_url}"
   }
-  if User.where(login: client.user.login).count == 1
+  if User.where(login: locals[:login]).count == 1
     locals['status'] = 'Welcome back!'
   else
     locals['status'] = 'Success!'
-    User.insert({login: client.user.login}) 
+    User.insert({login: locals[:login]})
+    client = Octokit::Client.new(:access_token => ENV['GITHUB_AUTH_TOKEN']) # next ops as repo owner
+    Check.where(login: locals[:login]).each do |e|
+      client.create_status(e.repo, e.sha, 'success', { context: 'license/cla' })
+      e.delete
+    end
   end
   erb :profile, :locals => locals
 end
