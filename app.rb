@@ -64,6 +64,11 @@ post '/webhook' do
         description: "Contributor License Agreement signed by @#{pr_login}."
       }
     )
+    client.add_comment(
+      repo,
+      pr_number,
+      'When this pull request was created, the Contributor License Agreement was already signed.'
+    )
   else
     client.create_status(
       repo,
