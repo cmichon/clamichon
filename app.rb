@@ -40,7 +40,7 @@ get '/profile' do
         { context: 'license/cla',
           description: "Contributor License Agreement signed by @#{locals[:login]}."
         }
-      )
+      ) rescue nil # we may hit an exception (ex: repo gone), which we clean up next line anyway
       e.delete
     end
   end
