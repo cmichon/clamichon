@@ -2,6 +2,10 @@
 
 #~ set :bind, '0.0.0.0' # needed outside heroku
 
+error do
+  redirect '/'
+end
+
 get '/' do
   erb :index, :locals => {:client_id => ENV['CLIENT_ID']}
 end
