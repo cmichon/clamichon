@@ -70,8 +70,14 @@ post '/webhook' do
       pr.head.sha,
       'pending',
       { context: 'license/cla',
-        description: '<a href="https://clamichon.herokuapp.com">Contributor License Agreement</a> is not signed yet.'
+        description: 'Contributor License Agreement is not signed yet.',
+        target_url: 'https://clamichon.herokuapp.com'
       }
+    )
+    client.add_comment(
+      repo,
+      pr_number,
+      'When this pull request was created, the <a href="https://clamichon.herokuapp.com/">Contributor License Agreement</a> was not signed yet.'
     )
     Check.insert({login: pr_login, repo: repo, sha: pr.head.sha})
   end
