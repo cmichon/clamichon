@@ -7,18 +7,18 @@ error do
 end
 
 get '/' do
-  erb :index, :locals => {:client_id => ENV['CLIENT_ID']}
+  erb :index, locals: {client_id: ENV['CLIENT_ID']}
 end
 
 get '/profile' do
   access_response = RestClient.post(
     'https://github.com/login/oauth/access_token',
     {
-      :client_id => ENV['CLIENT_ID'],
-      :client_secret => ENV['CLIENT_SECRET'],
-      :code => request.env['rack.request.query_hash']['code']
+      client_id: ENV['CLIENT_ID'],
+      client_secret: ENV['CLIENT_SECRET'],
+      code: request.env['rack.request.query_hash']['code']
     },
-    :accept => :json
+    accept: :json
   )
   access_token = JSON.parse(access_response)['access_token']
   client = Octokit::Client.new(access_token: access_token)
@@ -31,13 +31,20 @@ get '/profile' do
   else
     locals[:status] = 'Success!'
     User.insert({login: locals[:login]})
-    client = Octokit::Client.new(:access_token => ENV['GITHUB_AUTH_TOKEN']) # next ops as repo owner
+    client = Octokit::Client.new(access_token: ENV['GITHUB_AUTH_TOKEN']) # next ops as repo owner
     Check.where(login: locals[:login]).each do |e|
-      client.create_status(e.repo, e.sha, 'success', { context: 'license/cla' })
+      client.create_status(
+        e.repo,
+        e.sha,
+        'success',
+        { context: 'license/cla',
+          description: "Contributor License Agreement signed by @#{locals[:login]}."
+        }
+      )
       e.delete
     end
   end
-  erb :profile, :locals => locals
+  erb :profile, locals: locals
 end
 
 post '/webhook' do
@@ -45,7 +52,7 @@ post '/webhook' do
   payload = JSON.parse str_body
   repo = payload["repository"]["full_name"]
   pr_number = payload["number"]
-  client = Octokit::Client.new(:access_token => ENV['GITHUB_AUTH_TOKEN'])
+  client = Octokit::Client.new(access_token: ENV['GITHUB_AUTH_TOKEN'])
   pr = client.pull_request(repo, pr_number)
   pr_login = pr.head.user.login
   if User.where(login: pr_login).count == 1
@@ -54,8 +61,7 @@ post '/webhook' do
       pr.head.sha,
       'success',
       { context:'license/cla',
-        :description => "Contributor License Agreement signed by @#{pr_login}.",
-        :state => 'success'
+        description: "Contributor License Agreement signed by @#{pr_login}."
       }
     )
   else
@@ -63,10 +69,9 @@ post '/webhook' do
       repo,
       pr.head.sha,
       'pending',
-      { :context => 'license/cla',
-        :description => 'Contributor License Agreement is not signed yet.',
-        :state => 'pending',
-        :target_url => 'http://clamichon.herokuapp.com'
+      { context: 'license/cla',
+        description: 'Contributor License Agreement is not signed yet.',
+        target_url: 'http://clamichon.herokuapp.com'
       }
     )
     Check.insert({login: pr_login, repo: repo, sha: pr.head.sha})
