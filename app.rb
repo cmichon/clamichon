@@ -26,15 +26,11 @@ get '/profile' do
     user_login: client.user.login,
     user_url: client.user.html_url
   }
-  if User.where(github_login: client.user.login).count == 1
+  if User.where(login: client.user.login).count == 1
     locals['status'] = 'Welcome back!'
   else
     locals['status'] = 'Success!'
-    User.insert({
-      email: "x",
-      full_name: "x",
-      github_login: client.user.login
-    }) 
+    User.insert({login: client.user.login}) 
   end
   erb :profile, :locals => locals
 end
@@ -47,7 +43,7 @@ post '/webhook' do
   client = Octokit::Client.new(:access_token => ENV['GITHUB_AUTH_TOKEN'])
   pr = client.pull_request(repo, pr_number)
   pr_login = pr.head.user.login
-  if User.where(github_login: pr_login).count == 1
+  if User.where(login: pr_login).count == 1
     client.create_status(
       repo,
       pr.head.sha,
