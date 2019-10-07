@@ -1,5 +1,3 @@
-%w[octokit roda].map &method(:require)
-
 class App < Roda
   route do |r|
 
