@@ -1,4 +1,4 @@
-%w[octokit rest-client sinatra sinatra/reloader].map &method(:require)
+%w[octokit sinatra].map &method(:require)
 
 #~ set :bind, '0.0.0.0' # needed outside heroku
 
@@ -11,14 +11,14 @@ get '/' do
 end
 
 get '/profile' do
-p access_response = Faraday.post( # RestClient.post(
+  access_response = Faraday.post(
     'https://github.com/login/oauth/access_token',
     {
       client_id: ENV['CLIENT_ID'],
       client_secret: ENV['CLIENT_SECRET'],
       code: request.env['rack.request.query_hash']['code']
     },
-    { Accept: 'application/json' } # accept: :json
+    { Accept: 'application/json' }
   )
   access_token = JSON.parse(access_response.body)['access_token']
   client = Octokit::Client.new(access_token: access_token)
