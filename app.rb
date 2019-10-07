@@ -11,14 +11,14 @@ get '/' do
 end
 
 get '/profile' do
-  access_response = RestClient.post(
+p access_response = Faraday.post( # RestClient.post(
     'https://github.com/login/oauth/access_token',
     {
       client_id: ENV['CLIENT_ID'],
       client_secret: ENV['CLIENT_SECRET'],
       code: request.env['rack.request.query_hash']['code']
     },
-    accept: :json
+    { Accept: 'application/json' } # accept: :json
   )
   access_token = JSON.parse(access_response)['access_token']
   client = Octokit::Client.new(access_token: access_token)
