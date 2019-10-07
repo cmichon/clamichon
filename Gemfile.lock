@@ -3,22 +3,10 @@ GEM
   specs:
     addressable (2.7.0)
       public_suffix (>= 2.0.2, < 5.0)
-    backports (3.15.0)
-    domain_name (0.5.20190701)
-      unf (>= 0.0.5, < 1.0.0)
     faraday (0.16.2)
       multipart-post (>= 1.2, < 3)
-    ffi (1.11.1-x64-mingw32)
-    http-accept (1.7.0)
-    http-cookie (1.0.3)
-      domain_name (~> 0.5)
-    mime-types (3.3)
-      mime-types-data (~> 3.2015)
-    mime-types-data (3.2019.0904)
-    multi_json (1.13.1)
     multipart-post (2.1.1)
     mustermann (1.0.3)
-    netrc (0.11.0)
     nio4r (2.5.2)
     octokit (4.14.0)
       sawyer (~> 0.8.0, >= 0.5.3)
@@ -29,37 +17,16 @@ GEM
     rack (2.0.7)
     rack-protection (2.0.7)
       rack
-    rest-client (2.1.0)
-      http-accept (>= 1.7.0, < 2.0)
-      http-cookie (>= 1.0.2, < 2.0)
-      mime-types (>= 1.16, < 4.0)
-      netrc (~> 0.8)
-    rest-client (2.1.0-x64-mingw32)
-      ffi (~> 1.9)
-      http-accept (>= 1.7.0, < 2.0)
-      http-cookie (>= 1.0.2, < 2.0)
-      mime-types (>= 1.16, < 4.0)
-      netrc (~> 0.8)
     sawyer (0.8.2)
       addressable (>= 2.3.5)
       faraday (> 0.8, < 2.0)
-    sequel (5.24.0)
+    sequel (5.25.0)
     sinatra (2.0.7)
       mustermann (~> 1.0)
       rack (~> 2.0)
       rack-protection (= 2.0.7)
       tilt (~> 2.0)
-    sinatra-contrib (2.0.7)
-      backports (>= 2.8.2)
-      multi_json
-      mustermann (~> 1.0)
-      rack-protection (= 2.0.7)
-      sinatra (= 2.0.7)
-      tilt (~> 2.0)
     tilt (2.0.10)
-    unf (0.1.4)
-      unf_ext
-    unf_ext (0.0.7.6)
 
 PLATFORMS
   ruby
@@ -68,10 +35,8 @@ DEPENDENCIES
   octokit
   pg
   puma
-  rest-client
   sequel
   sinatra
-  sinatra-contrib
 
 BUNDLED WITH
    2.0.2
