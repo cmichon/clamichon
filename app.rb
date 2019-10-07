@@ -15,8 +15,8 @@ class App < Roda
         },
         { Accept: 'application/json' }
       )
-      access_token = JSON.parse(access_response.body)['access_token'] rescue r.redirect '/' # failsafe
-      client = Octokit::Client.new(access_token: access_token) rescue r.redirect '/' # failsafe
+      access_token = JSON.parse(access_response.body)['access_token'] rescue r.redirect('/') # failsafe
+      client = Octokit::Client.new(access_token: access_token) rescue r.redirect('/') # failsafe
       locals = {
         login: "#{client.user.login}",
         url: "#{client.user.html_url}"
