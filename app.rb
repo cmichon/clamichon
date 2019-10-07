@@ -1,5 +1,7 @@
 class App < Roda
+  plugin :public
   plugin :render
+
   route do |r|
 
     r.root do
