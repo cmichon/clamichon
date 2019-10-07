@@ -10,13 +10,13 @@ class App < Roda
       render :index, locals: { client_id: ENV['CLIENT_ID'] }
     end
 
-    r.get '/profile' do
+    r.get 'profile' do
       access_response = Faraday.post(
         'https://github.com/login/oauth/access_token',
         {
           client_id: ENV['CLIENT_ID'],
           client_secret: ENV['CLIENT_SECRET'],
-          code: request.env['rack.request.query_hash']['code']
+          code: r.params['code']
         },
         { Accept: 'application/json' }
       )
@@ -47,7 +47,7 @@ class App < Roda
       render :profile, locals: locals
     end
 
-    r.post '/webhook' do
+    r.post 'webhook' do
       return "" unless request.env['HTTP_X_GITHUB_EVENT'] == "pull_request" # we only accept pull_request
       payload = JSON.parse request.body.read
       repo = payload["repository"]["full_name"]
