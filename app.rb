@@ -1,8 +1,10 @@
 class App < Roda
-  plugin :public, root: 'public'
+  plugin :public
   plugin :render
 
   route do |r|
+
+    r.public
 
     r.root do
       render :index, locals: { client_id: ENV['CLIENT_ID'] }
