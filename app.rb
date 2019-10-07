@@ -20,7 +20,7 @@ p access_response = Faraday.post( # RestClient.post(
     },
     { Accept: 'application/json' } # accept: :json
   )
-  access_token = JSON.parse(access_response)['access_token']
+  access_token = JSON.parse(access_response.body)['access_token']
   client = Octokit::Client.new(access_token: access_token)
   locals = {
     login: "#{client.user.login}",
