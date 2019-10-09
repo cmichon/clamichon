@@ -2,7 +2,7 @@ Sequel.migration do
   change do
     create_table(:users) do
       primary_key :id
-      String :github_login, unique: true, null: false
+      String :login, unique: true, null: false
       FalseClass :cla_invidual, null: false, default: false
       FalseClass :cla_corporate, null: false, default: false
       String :full_name, null: false
