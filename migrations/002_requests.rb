@@ -6,6 +6,7 @@ Sequel.migration do
       String :login, null: false
       String :repo, null: false
       String :sha, null: false
+      # remember add the timestamp of the pull_request
       index :login
       index :status
     end
