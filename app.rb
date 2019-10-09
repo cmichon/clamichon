@@ -36,7 +36,7 @@ class App < Roda
         locals[:status] = 'Success!'
         User.insert({login: locals[:login]})
         client = Octokit::Client.new(access_token: ENV['GITHUB_AUTH_TOKEN']) # next ops as repo owner
-        Check.where(login: locals[:login]).each do |e|
+        Request.where(login: locals[:login], status: 'pending').each do |e|
           client.create_status(
             e.repo,
             e.sha,
@@ -45,7 +45,8 @@ class App < Roda
               description: "Contributor License Agreement signed by @#{locals[:login]}."
             }
           ) rescue nil # we may hit an exception (ex: repo gone), which we clean up next line anyway
-          e.delete
+          e.update({status: 'open'})
+        # e.delete
         end
       end
       render :profile, locals: locals
@@ -88,7 +89,7 @@ class App < Roda
           pr_number,
           'When this pull request was created, the <a href="https://clamichon.herokuapp.com/">Contributor License Agreement</a> was not signed yet.'
         )
-        Check.insert({login: pr_login, repo: repo, sha: pr.head.sha})
+        Request.insert({status: 'pending', login: pr_login, repo: repo, sha: pr.head.sha})
       end
       "webhook processed"
     end
