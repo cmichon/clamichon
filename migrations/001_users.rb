@@ -13,10 +13,12 @@ Sequel.migration do
       String :phone, null: false
       String :corporation_name
       String :corporation_address
-      String :corspoc_name
-      String :corspoc_email
-      String :corspoc_phone
-      String :corspoc_fax
+      String :corporation_spoc_name
+      String :corporation_spoc_email
+      String :corporation_spoc_phone
+      String :corporation_spoc_fax
     end
   end
 end
+
+# vim:et:ff=unix:sw=2:ts=2:
