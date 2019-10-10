@@ -37,10 +37,10 @@ class App < Roda
         User.insert({
           login: locals[:login],
           cla_invidual: true,
-          full_name: "bibi"
-          postal_address: "here"
-          country: "any"
-          email: "email@github.com"
+          full_name: "bibi",
+          postal_address: "here",
+          country: "any",
+          email: "email@github.com",
           phone: "1234567890"
         })
         client = Octokit::Client.new(access_token: ENV['GITHUB_AUTH_TOKEN']) # next ops as repo owner
