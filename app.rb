@@ -82,6 +82,7 @@ class App < Roda
           pr_number,
           'When this pull request was created, the Contributor License Agreement was already signed.'
         )
+        Request.insert({status: 'open', login: pr_login, repo: repo, sha: pr.head.sha})
       else
         client.create_status(
           repo,
