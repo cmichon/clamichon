@@ -30,18 +30,17 @@ class App < Roda
       rescue # failsafe
         r.redirect('/')
       end
-      p client.user
       if User.where(login: locals[:login]).count == 1
         locals[:status] = 'Welcome back!'
       else
         locals[:status] = 'Success!'
         User.insert({
-          login: locals[:login],
+          login: client.user.login,
           cla_invidual: true,
-          full_name: "bibi",
+          full_name: client.user.name,
           postal_address: "here",
           country: "any",
-          email: "email@github.com",
+          email: client.user.email,
           phone: "1234567890"
         })
         client = Octokit::Client.new(access_token: ENV['GITHUB_AUTH_TOKEN']) # next ops as repo owner
