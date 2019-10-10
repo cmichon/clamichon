@@ -1,56 +1,57 @@
+
 class App < Roda
   plugin :public
   plugin :render
 
   route do |r|
 
-    r.public
+  # r.public
 
-    r.root do
-      render :index, locals: { client_id: ENV['CLIENT_ID'] }
-    end
+  # r.root do
+  #   render :index, locals: { client_id: ENV['CLIENT_ID'] }
+  # end
 
-    r.get 'profile' do
-      access_response = Faraday.post(
-        'https://github.com/login/oauth/access_token',
-        {
-          client_id: ENV['CLIENT_ID'],
-          client_secret: ENV['CLIENT_SECRET'],
-          code: r.params['code']
-        },
-        { Accept: 'application/json' }
-      )
-      begin
-        access_token = JSON.parse(access_response.body)['access_token']
-        client = Octokit::Client.new(access_token: access_token) 
-        locals = {
-          login: "#{client.user.login}",
-          url: "#{client.user.html_url}"
-        }
-      rescue # failsafe
-        r.redirect('/')
-      end
-      if User.where(login: locals[:login]).count == 1
-        locals[:status] = 'Welcome back!'
-      else
-        locals[:status] = 'Success!'
-        User.insert({login: locals[:login]})
-        client = Octokit::Client.new(access_token: ENV['GITHUB_AUTH_TOKEN']) # next ops as repo owner
-        Request.where(login: locals[:login], status: 'pending').each do |e|
-          client.create_status(
-            e.repo,
-            e.sha,
-            'success',
-            { context: 'license/cla',
-              description: "Contributor License Agreement signed by @#{locals[:login]}."
-            }
-          ) rescue nil # we may hit an exception (ex: repo gone), which we clean up next line anyway
-          e.update({status: 'open'})
-        # e.delete
-        end
-      end
-      render :profile, locals: locals
-    end
+  # r.get 'profile' do
+  #   access_response = Faraday.post(
+  #     'https://github.com/login/oauth/access_token',
+  #     {
+  #       client_id: ENV['CLIENT_ID'],
+  #       client_secret: ENV['CLIENT_SECRET'],
+  #       code: r.params['code']
+  #     },
+  #     { Accept: 'application/json' }
+  #   )
+  #   begin
+  #     access_token = JSON.parse(access_response.body)['access_token']
+  #     client = Octokit::Client.new(access_token: access_token) 
+  #     locals = {
+  #       login: "#{client.user.login}",
+  #       url: "#{client.user.html_url}"
+  #     }
+  #   rescue # failsafe
+  #     r.redirect('/')
+  #   end
+  #   if User.where(login: locals[:login]).count == 1
+  #     locals[:status] = 'Welcome back!'
+  #   else
+  #     locals[:status] = 'Success!'
+  #     User.insert({login: locals[:login]})
+  #     client = Octokit::Client.new(access_token: ENV['GITHUB_AUTH_TOKEN']) # next ops as repo owner
+  #     Request.where(login: locals[:login], status: 'pending').each do |e|
+  #       client.create_status(
+  #         e.repo,
+  #         e.sha,
+  #         'success',
+  #         { context: 'license/cla',
+  #           description: "Contributor License Agreement signed by @#{locals[:login]}."
+  #         }
+  #       ) rescue nil # we may hit an exception (ex: repo gone), which we clean up next line anyway
+  #       e.update({status: 'open'})
+  #     # e.delete
+  #     end
+  #   end
+  #   render :profile, locals: locals
+  # end
 
     r.post 'webhook' do
       return "" unless request.env['HTTP_X_GITHUB_EVENT'] == "pull_request" # we only accept pull_request
@@ -81,13 +82,14 @@ class App < Roda
           'pending',
           { context: 'license/cla',
             description: 'Contributor License Agreement is not signed yet.',
-            target_url: 'https://clamichon.herokuapp.com'
+            target_url: 'https://github.com' # 'https://clamichon.herokuapp.com'
           }
         )
         client.add_comment(
           repo,
           pr_number,
-          'When this pull request was created, the <a href="https://clamichon.herokuapp.com/">Contributor License Agreement</a> was not signed yet.'
+          'When this pull request was created, the <a href="https://github.com/">Contributor License Agreement</a> was not signed yet.'
+        # 'When this pull request was created, the <a href="https://clamichon.herokuapp.com/">Contributor License Agreement</a> was not signed yet.'
         )
         Request.insert({status: 'pending', login: pr_login, repo: repo, sha: pr.head.sha})
       end
