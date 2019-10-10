@@ -30,6 +30,7 @@ class App < Roda
       rescue # failsafe
         r.redirect('/')
       end
+      p client.user
       if User.where(login: locals[:login]).count == 1
         locals[:status] = 'Welcome back!'
       else
