@@ -20,7 +20,7 @@ module AppHelpers
     } # will fail if access_token is wrong
   end #}}}
   def cla_signature #{{{
-    if User.where(login: locals[:login]).count == 1
+    if User.where(login: @locals[:login]).count == 1
       already_signed
     else
       initial_signature
