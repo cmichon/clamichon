@@ -25,7 +25,7 @@ class App < Roda
       locals = {
         login: "#{user.login}",
         url: "#{user.html_url}"
-      } rescue r.redirect('/') # WILL FAIL IF ACCESS_TOKEN IS WRONG
+      }
       if User.where(login: user.login).count == 1 # ALREADY_SIGNED
         locals[:status] = 'Welcome back!'
       else # INITIAL_SIGNATURE: ADD NEW CLA USER, RELEASE PENDING SHA1
@@ -53,7 +53,7 @@ class App < Roda
         locals[:status] = 'Success!'
       end
       render :profile, locals: locals
-    end
+    end rescue r.redirect('/') # WILL FAIL IF ACCESS_TOKEN IS WRONG
 
     r.post 'webhook' do
       payload = JSON.parse request.body.read
